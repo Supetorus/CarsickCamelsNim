@@ -7,7 +7,21 @@ public class Game : MonoBehaviour
 {
 	public GameObject row;
 	public GameObject image;
-	List<Row> rows = new List<Row>();
+	public GameObject button;
+	public Transform buttonsPanel;
+	private List<Row> rows = new List<Row>();
+	private List<GameObject> buttons = new List<GameObject>();
+
+	private int rowIndex = -1;
+
+	private void Awake()
+	{
+		foreach(Button b in buttonsPanel.GetComponentsInChildren<Button>())
+		{
+			b.gameObject.SetActive(false);
+			buttons.Add(b.gameObject);
+		}
+	}
 
 	public void StartGame(int difficulty)
 	{
@@ -20,12 +34,14 @@ public class Game : MonoBehaviour
 				SetUpRow(1);
 				SetUpRow(3);
 				SetUpRow(5);
+				for (int i = 0; i < 3; ++i) { buttons[i].SetActive(true); }
 				break;
 			case 1:
 				SetUpRow(1);
 				SetUpRow(3);
 				SetUpRow(5);
 				SetUpRow(7);
+				for (int i = 0; i < 4; ++i) { buttons[i].SetActive(true); }
 				break;
 			case 2:
 				SetUpRow(3);
@@ -33,6 +49,7 @@ public class Game : MonoBehaviour
 				SetUpRow(7);
 				SetUpRow(9);
 				SetUpRow(11);
+				for (int i = 0; i < 5; ++i) { buttons[i].SetActive(true); }
 				break;
 		}
 	}
@@ -43,7 +60,12 @@ public class Game : MonoBehaviour
 		{
 			Destroy(row.gameObject);
 		}
-		
+
+		foreach(GameObject b in buttons)
+		{
+			b.SetActive(false);
+		}
+
 		rows.Clear();
 	}
 
@@ -53,14 +75,25 @@ public class Game : MonoBehaviour
 
 		for (int i = 0; i < count; ++i)
 		{
-			newRow.images.Add(Instantiate(image, newRow.transform).GetComponent<Sprite>());
+			newRow.images.Add(Instantiate(image, newRow.transform));
 		}
 
 		rows.Add(newRow);
 	}
 
+	public void EndTurn()
+	{
+		rowIndex = -1;
+	}
+
 	public void Remove(int index)
 	{
-		rows[index].gameObject.SetActive(false);
+		if(rowIndex == -1) { rowIndex = index; }
+
+		if (rowIndex == index && rows[index].Remove())
+		{
+			rows[index].gameObject.SetActive(false);
+			buttons[index].gameObject.SetActive(false);
+		}
 	}
 }
