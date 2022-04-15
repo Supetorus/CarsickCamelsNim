@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Game : MonoBehaviour
 {
@@ -11,12 +12,20 @@ public class Game : MonoBehaviour
 	public Transform buttonsPanel;
 	private List<Row> rows = new List<Row>();
 	private List<GameObject> buttons = new List<GameObject>();
-	[SerializeField]private GameObject gameOver;
+	[SerializeField] GameObject gameOver;
 
 	private int rowIndex = -1;
 	private int rowsCount;
 
-	private int diff;
+	private int difficultyHolder;
+
+	private string player1;
+	private string player2;
+	[SerializeField] TextMeshProUGUI nameInput1;
+	[SerializeField] TextMeshProUGUI nameInput2;
+	[SerializeField] TextMeshProUGUI playerTurn;
+	private int turn = 0;
+	string[] players = new string[2];
 
 	private void Awake()
 	{
@@ -27,14 +36,35 @@ public class Game : MonoBehaviour
 		}
 	}
 
+	public void SetNames()
+    {
+		player1 = nameInput1.text;
+		player2 = nameInput2.text;
+
+		if (string.IsNullOrEmpty(player1))
+		{
+			player1 = "Kyle 1";
+		}
+		if (string.IsNullOrEmpty(player2))
+		{
+			player2 = "Kyle 2";
+		}
+
+		Debug.Log(player1);
+		Debug.Log(player2);
+
+		players[0] = player1;
+		players[1] = player2;
+    }
+
 	public void NewGame()
 	{
-		StartGame(diff);
+		StartGame(difficultyHolder);
 	}
 
 	public void StartGame(int difficulty)
 	{
-		diff = difficulty;
+		difficultyHolder = difficulty;
 		ResetGame();
 
 		switch (difficulty)
@@ -65,6 +95,8 @@ public class Game : MonoBehaviour
 				for (int i = 0; i < 5; ++i) { buttons[i].SetActive(true); }
 				break;
 		}
+		turn = Random.Range(0, 1);
+		playerTurn.text = players[turn];
 	}
 
 	private void ResetGame()
@@ -96,6 +128,14 @@ public class Game : MonoBehaviour
 
 	public void EndTurn()
 	{
+        if (rowIndex == -1)
+        {
+			return;
+        }
+
+		turn = (turn + 1) % 2;
+		playerTurn.text = players[turn];
+        Debug.Log(turn);
 		rowIndex = -1;
 	}
 
