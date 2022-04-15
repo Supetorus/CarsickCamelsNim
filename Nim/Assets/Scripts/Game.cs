@@ -11,14 +11,16 @@ public class Game : MonoBehaviour
 	public Transform buttonsPanel;
 	private List<Row> rows = new List<Row>();
 	private List<GameObject> buttons = new List<GameObject>();
+	[SerializeField]private GameObject gameOver;
 
 	private int rowIndex = -1;
+	private int rowsCount;
 
 	private int diff;
 
 	private void Awake()
 	{
-		foreach(Button b in buttonsPanel.GetComponentsInChildren<Button>())
+		foreach (Button b in buttonsPanel.GetComponentsInChildren<Button>())
 		{
 			b.gameObject.SetActive(false);
 			buttons.Add(b.gameObject);
@@ -26,22 +28,23 @@ public class Game : MonoBehaviour
 	}
 
 	public void NewGame()
-    {
+	{
 		StartGame(diff);
-    }
+	}
 
 	public void StartGame(int difficulty)
 	{
 		diff = difficulty;
 		ResetGame();
 
-		switch(difficulty)
+		switch (difficulty)
 		{
 			default:
 			case 0:
 				SetUpRow(1);
 				SetUpRow(3);
 				SetUpRow(5);
+				rowsCount = 3;
 				for (int i = 0; i < 3; ++i) { buttons[i].SetActive(true); }
 				break;
 			case 1:
@@ -49,6 +52,7 @@ public class Game : MonoBehaviour
 				SetUpRow(3);
 				SetUpRow(5);
 				SetUpRow(7);
+				rowsCount = 4;
 				for (int i = 0; i < 4; ++i) { buttons[i].SetActive(true); }
 				break;
 			case 2:
@@ -57,6 +61,7 @@ public class Game : MonoBehaviour
 				SetUpRow(7);
 				SetUpRow(9);
 				SetUpRow(11);
+				rowsCount = 5;
 				for (int i = 0; i < 5; ++i) { buttons[i].SetActive(true); }
 				break;
 		}
@@ -64,12 +69,12 @@ public class Game : MonoBehaviour
 
 	private void ResetGame()
 	{
-		foreach(Row row in rows)
+		foreach (Row row in rows)
 		{
 			Destroy(row.gameObject);
 		}
 
-		foreach(GameObject b in buttons)
+		foreach (GameObject b in buttons)
 		{
 			b.SetActive(false);
 		}
@@ -96,17 +101,23 @@ public class Game : MonoBehaviour
 
 	public void Remove(int index)
 	{
-		if(rowIndex == -1) { rowIndex = index; }
+		if (rowIndex == -1) { rowIndex = index; }
 
 		if (rowIndex == index && rows[index].Remove())
 		{
 			rows[index].gameObject.SetActive(false);
 			buttons[index].gameObject.SetActive(false);
+			if(--rowsCount == 0)
+			{
+				//game end
+				gameOver.SetActive(true);
+				transform.parent.gameObject.SetActive(false);
+			}
 		}
 	}
 
-    public void OnApplicationQuit()
-    {
+	public void OnApplicationQuit()
+	{
 		Application.Quit();
-    }
+	}
 }
