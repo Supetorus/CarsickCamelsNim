@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
 
 	private int rowIndex = -1;
 
+	private int diff;
+
 	private void Awake()
 	{
 		foreach(Button b in buttonsPanel.GetComponentsInChildren<Button>())
@@ -23,8 +25,14 @@ public class Game : MonoBehaviour
 		}
 	}
 
+	public void NewGame()
+    {
+		StartGame(diff);
+    }
+
 	public void StartGame(int difficulty)
 	{
+		diff = difficulty;
 		ResetGame();
 
 		switch(difficulty)
@@ -96,4 +104,9 @@ public class Game : MonoBehaviour
 			buttons[index].gameObject.SetActive(false);
 		}
 	}
+
+    public void OnApplicationQuit()
+    {
+		Application.Quit();
+    }
 }
