@@ -3873,6 +3873,7 @@ MonoBehaviour:
   image: {fileID: 1765308559347236921, guid: 739c054599a5f47409504add4ee10498, type: 3}
   button: {fileID: 7306074733795471195, guid: 56885d5d6bb3515418b4f65275546451, type: 3}
   buttonsPanel: {fileID: 2032712157}
+  gameOver: {fileID: 364918277}
 --- !u!114 &1044869223
 MonoBehaviour:
   m_ObjectHideFlags: 0
