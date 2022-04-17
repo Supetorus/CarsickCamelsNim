@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +24,8 @@ public class Game : MonoBehaviour
 	[SerializeField] TextMeshProUGUI nameInput1;
 	[SerializeField] TextMeshProUGUI nameInput2;
 	[SerializeField] TextMeshProUGUI playerTurn;
+	[SerializeField] TextMeshProUGUI winner;
+	[SerializeField] TextMeshProUGUI loser;
 	private int turn = 0;
 	string[] players = new string[2];
 
@@ -38,16 +40,19 @@ public class Game : MonoBehaviour
 
 	public void SetNames()
     {
-		player1 = nameInput1.text;
-		player2 = nameInput2.text;
+		player1 = "";
+		player2 = "";
 
-		if (string.IsNullOrEmpty(player1))
+		player1 += nameInput1.text.Trim();
+		player2 += nameInput2.text.Trim();
+
+		if (string.IsNullOrEmpty(player1) || player1 == "​")
 		{
-			player1 = "Kyle 1";
+			player1 = "Kyle";
 		}
-		if (string.IsNullOrEmpty(player2))
+		if (string.IsNullOrEmpty(player2) || player2 == "​")
 		{
-			player2 = "Kyle 2";
+			player2 = "Kylee";
 		}
 
 		Debug.Log(player1);
@@ -151,6 +156,8 @@ public class Game : MonoBehaviour
 			{
 				//game end
 				gameOver.SetActive(true);
+				winner.text = players[(turn + 1) % 2] + " is the best";
+				loser.text = players[turn] + " is a loser";
 				transform.parent.gameObject.SetActive(false);
 			}
 		}
